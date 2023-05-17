@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Paint Program</title>
+    <style>
+        table { border-collapse: collapse; }
+        td { width: 20px; height: 20px; border: 1px solid #000; cursor: pointer; }
+        .selected { border: 2px solid red; }
+    </style>
+</head>
+<body>
+    <button onclick="setColor('blue')">Blue</button>
+    <button onclick="setColor('green')">Green</button>
+    <button onclick="setColor('red')">Red</button>
+    <button onclick="setColor('yellow')">Yellow</button>
+    <button onclick="clearBoard()">Clear</button>
+    <button onclick="randomizeColors()">Randomize</button>
+    <button onclick="moveLeft()">Move</button>
+
+    <table id="grid"></table>
+
+    <script>
+        var currentColor = 'blue';
+        var rows = 10;
+        var cols = 10;
+        var isDrawing = false;
+        var grid = document.getElementById('grid');
+
+        for (var i = 0; i < rows; i++) {
+            var row = document.createElement('tr');
+            for (var j = 0; j < cols; j++) {
+                var cell = document.createElement('td');
+                cell.id = i + '-' + j;
+                cell.addEventListener('mouseover', function(event) {
+                    if (isDrawing) {
+                        event.target.style.backgroundColor = currentColor;
+                    }
+                });
+                row.appendChild(cell);
+            }
+            grid.appendChild(row);
+        }
+
+        grid.addEventListener('mousedown', function() { isDrawing = true; });
+        grid.addEventListener('mouseup', function() { isDrawing = false; });
+
+        function setColor(color) {
+            currentColor = color;
+        }
+
+        function clearBoard() {
+            var cells = document.getElementsByTagName('td');
+            for (var i = 0; i < cells.length; i++) {
+                cells[i].style.backgroundColor = 'white';
+            }
+        }
+
+        function randomizeColors() {
+            var cells = document.getElementsByTagName('td');
+            for (var i = 0; i < cells.length; i++) {
+                cells[i].style.backgroundColor = '#' + Math.floor(Math.random()*16777215).toString(16);
+            }
+        }
+
+        function moveLeft() {
+            for (var i = 0; i < rows; i++) {
+                for (var j = 0; j < cols - 1; j++) {
+                    var cell = document.getElementById(i + '-' + j);
+                    var nextCell = document.getElementById(i + '-' + (j + 1));
+                    cell.style.backgroundColor = nextCell.style.backgroundColor;
+                }
+                var lastCell = document.getElementById(i + '-' + (cols - 1));
+                lastCell.style.backgroundColor = 'white';
+            }
+        }
+    </script>
+
+    <script src="/datatypes.js"></script>
+</body>
+</html>
